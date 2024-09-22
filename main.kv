@@ -1,0 +1,181 @@
+<LoginScreen>:  # Definition des Login-Bildschirms
+    BoxLayout:  # Verwendung eines BoxLayouts für das vertikale Layout
+        orientation: 'vertical'  # Legt die Orientierung des Layouts auf vertikal fest
+        spacing: 10  # Abstand zwischen den Elementen
+        padding: 5  # Innenabstand des Layouts
+
+        Label:  # Erstellt ein Label zur Anzeige eines Begrüßungstextes
+            text: 'Herzlich willkommen in deiner Arduino-Steuerungs-App!'  # Textinhalt des Labels
+            halign: 'center'  # Horizontale Ausrichtung des Textes auf der Mitte
+            valign: 'top'  # Vertikale Ausrichtung des Textes oben
+
+        TextInput:  # Textfeld zur Eingabe des Passworts
+            id: password_input  # ID des TextInput-Widgets
+            hint_text: 'Code Eingeben'  # Platzhaltertext, der angezeigt wird, wenn das Textfeld leer ist
+            password: True  # Maskiert die Eingabe als Passwort
+            multiline: False  # Erlaubt keine mehrzeilige Eingabe
+            size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+            height: "40dp"  # Höhe des Textfelds
+            size_hint_x: 0.5  # Skalierung in der horizontalen Richtung (50% der Breite)
+            pos_hint: {"center_x": 0.5}  # Zentriert das Textfeld horizontal
+
+        Button:  # Button für die Anmeldung
+            text: 'Anmelden'  # Text, der auf dem Button angezeigt wird
+            on_press: root.connect(self)  # Aktion, die beim Drücken des Buttons ausgeführt wird (Verbindung herstellen)
+            size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+            height: "40dp"  # Höhe des Buttons
+            size_hint_x: 0.5  # Skalierung in der horizontalen Richtung (50% der Breite)
+            background_color: 0, 1, 0, 1  # Hintergrundfarbe des Buttons (grün)
+            pos_hint: {"center_x": 0.5}  # Zentriert den Button horizontal
+
+        Label:  # Label zur Anzeige des Ergebnisses der Anmeldung
+            id: result_label  # ID des Labels
+            text: ''  # Initialer Textinhalt des Labels (leer)
+
+<MainScreen>:  # Definition des Hauptbildschirms
+    BoxLayout:  # Verwendung eines BoxLayouts für das vertikale Layout
+        orientation: 'vertical'  # Legt die Orientierung des Layouts auf vertikal fest
+        spacing: 15  # Abstand zwischen den Elementen
+        padding: 10, 20  # Innenabstand des Layouts (horizontal, vertikal)
+
+        Label:  # Label zur Anzeige eines Begrüßungstextes für den Steuerungsbereich
+            text: 'Steuerungsbereich!'  # Textinhalt des Labels
+            size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+            height: "40dp"  # Höhe des Labels
+
+        TextInput:  # Textfeld zur Eingabe der IP-Adresse
+            id: ip_address  # ID des TextInput-Widgets
+            hint_text: 'Enter IP Address'  # Platzhaltertext, der angezeigt wird, wenn das Textfeld leer ist
+            multiline: False  # Erlaubt keine mehrzeilige Eingabe
+            size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+            height: "40dp"  # Höhe des Textfelds
+            size_hint_x: 0.7  # Skalierung in der horizontalen Richtung (70% der Breite)
+            pos_hint: {"center_x": 0.5}  # Zentriert das Textfeld horizontal
+
+        Label:  # Label zur Anzeige des Ergebnisses der IP-Adressvalidierung
+            id: result_label_ip  # ID des Labels
+            text: ''  # Initialer Textinhalt des Labels (leer)
+            size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+            height: "20dp"  # Höhe des Labels
+
+        BoxLayout:  # Unteres Layout zur Gruppierung von Steuerungselementen
+            orientation: 'vertical'  # Legt die Orientierung des Layouts auf vertikal fest
+            spacing: 10  # Abstand zwischen den Elementen
+            padding: [0, 0, 0, 10]  # Innenabstand des Layouts (nur unten)
+
+            BoxLayout:  # Unterlayout für die WiFi-Steuerung
+                orientation: 'vertical'  # Legt die Orientierung des Layouts auf vertikal fest
+                size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                height: "130dp"  # Höhe des Layouts
+                spacing: 5  # Abstand zwischen den Elementen
+
+                Label:  # Label zur Kennzeichnung des WiFi-Steuerbereichs
+                    text: 'WiFi Control'  # Textinhalt des Labels
+                    size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                    height: "30dp"  # Höhe des Labels
+
+                BoxLayout:  # Unterlayout für die WiFi-Steuerungsbuttons
+                    size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                    height: "50dp"  # Höhe des Layouts
+                    spacing: 10  # Abstand zwischen den Buttons
+
+                    Button:  # Button zum Einschalten der LED über WiFi
+                        id: led_on_wifi_button  # ID des Buttons
+                        text: 'LED an (WiFi)'  # Textinhalt des Buttons
+                        size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                        height: "40dp"  # Höhe des Buttons
+                        size_hint_x: 0.4  # Skalierung in der horizontalen Richtung (40% der Breite)
+                        on_press: root.turn_on_led()  # Aktion, die beim Drücken des Buttons ausgeführt wird (LED einschalten)
+                        pos_hint: {"center_x": 0.5}  # Zentriert den Button horizontal
+                        disabled: True  # Deaktiviert den Button standardmäßig
+
+                    Button:  # Button zum Ausschalten der LED über WiFi
+                        id: led_off_wifi_button  # ID des Buttons
+                        text: 'LED aus (WiFi)'  # Textinhalt des Buttons
+                        size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                        height: "40dp"  # Höhe des Buttons
+                        size_hint_x: 0.4  # Skalierung in der horizontalen Richtung (40% der Breite)
+                        on_press: root.turn_off_led()  # Aktion, die beim Drücken des Buttons ausgeführt wird (LED ausschalten)
+                        pos_hint: {"center_x": 0.5}  # Zentriert den Button horizontal
+                        disabled: True  # Deaktiviert den Button standardmäßig
+
+            BoxLayout:  # Unterlayout für die Bluetooth-Steuerung
+                orientation: 'vertical'  # Legt die Orientierung des Layouts auf vertikal fest
+                size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                height: "200dp"  # Höhe des Layouts
+                spacing: 5  # Abstand zwischen den Elementen
+
+                Label:  # Label zur Kennzeichnung des Bluetooth-Steuerbereichs
+                    text: 'Bluetooth Control'  # Textinhalt des Labels
+                    size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                    height: "30dp"  # Höhe des Labels
+
+                Button:  # Button zum Starten des Bluetooth-Scans
+                    id: scan_button  # ID des Buttons
+                    text: 'Scan Bluetooth Devices'  # Textinhalt des Buttons
+                    size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                    height: "40dp"  # Höhe des Buttons
+                    size_hint_x: 0.5  # Skalierung in der horizontalen Richtung (50% der Breite)
+                    on_press: root.start_scan()  # Aktion, die beim Drücken des Buttons ausgeführt wird (Scan starten)
+                    background_color: 0, 0, 1, 1  # Hintergrundfarbe des Buttons (blau)
+                    pos_hint: {"center_x": 0.5}  # Zentriert den Button horizontal
+
+                BoxLayout:  # Unterlayout für die Geräteauswahl und Verbindung
+                    size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                    height: "50dp"  # Höhe des Layouts
+                    spacing: 10  # Abstand zwischen den Elementen
+
+                    Spinner:  # Dropdown-Menü zur Auswahl eines Bluetooth-Geräts
+                        id: device_spinner  # ID des Spinners
+                        text: 'Select Device'  # Initialer Text des Spinners
+                        size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                        height: "40dp"  # Höhe des Spinners
+                        size_hint_x: 0.4  # Skalierung in der horizontalen Richtung (40% der Breite)
+                        pos_hint: {"center_x": 0.5}  # Zentriert den Spinner horizontal
+                        values: []  # Anfangsliste der Werte (leer)
+                        disabled: True  # Deaktiviert den Spinner standardmäßig
+
+                    Button:  # Button zum Verbinden mit dem ausgewählten Bluetooth-Gerät
+                        id: connect_button  # ID des Buttons
+                        text: 'Verbinden'  # Textinhalt des Buttons
+                        size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                        height: "40dp"  # Höhe des Buttons
+                        size_hint_x: 0.4  # Skalierung in der horizontalen Richtung (40% der Breite)
+                        on_press: root.connect_device()  # Aktion, die beim Drücken des Buttons ausgeführt wird (Verbindung herstellen)
+                        background_color: 0.5, 0.5, 0.5, 1  # Hintergrundfarbe des Buttons (grau)
+                        pos_hint: {"center_x": 0.5}  # Zentriert den Button horizontal
+                        disabled: True  # Deaktiviert den Button standardmäßig
+
+                BoxLayout:  # Unterlayout für die Bluetooth-LED-Steuerungsbuttons
+                    size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                    height: "50dp"  # Höhe des Layouts
+                    spacing: 10  # Abstand zwischen den Buttons
+
+                    Button:  # Button zum Einschalten der LED über Bluetooth
+                        id: led_on_button  # ID des Buttons
+                        text: 'LED an (Bluetooth)'  # Textinhalt des Buttons
+                        size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                        height: "40dp"  # Höhe des Buttons
+                        size_hint_x: 0.2  # Skalierung in der horizontalen Richtung (20% der Breite)
+                        on_press: root.control_led(1)  # Aktion, die beim Drücken des Buttons ausgeführt wird (LED einschalten)
+                        pos_hint: {"center_x": 0.2}  # Positioniert den Button horizontal
+                        disabled: True  # Deaktiviert den Button standardmäßig
+
+                    Button:  # Button zum Ausschalten der LED über Bluetooth
+                        id: led_off_button  # ID des Buttons
+                        text: 'LED aus (Bluetooth)'  # Textinhalt des Buttons
+                        size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+                        height: "40dp"  # Höhe des Buttons
+                        size_hint_x: 0.2  # Skalierung in der horizontalen Richtung (20% der Breite)
+                        on_press: root.control_led(0)  # Aktion, die beim Drücken des Buttons ausgeführt wird (LED ausschalten)
+                        pos_hint: {"center_x": 0.2}  # Positioniert den Button horizontal
+                        disabled: True  # Deaktiviert den Button standardmäßig
+
+        Button:  # Button zum Abmelden
+            text: 'Abmelden'  # Textinhalt des Buttons
+            size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
+            height: "40dp"  # Höhe des Buttons
+            size_hint_x: 0.5  # Skalierung in der horizontalen Richtung (50% der Breite)
+            pos_hint: {"center_x": 0.5}  # Zentriert den Button horizontal
+            background_color: 1, 0, 0, 1  # Hintergrundfarbe des Buttons (rot)
+            on_press: root.disconnect()  # Aktion, die beim Drücken des Buttons ausgeführt wird (Abmeldung)
