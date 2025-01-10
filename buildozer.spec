@@ -28,7 +28,8 @@ source.dir = .
 
 # Konfiguration der Verteilungsdatei
 # Erstellen Sie ein Kivy-Paket mit den Kivy-Abhängigkeiten
-requirements = python3, kivy==2.3.0, bleak, asyncio, setuptools, android,pyjnius
+rrequirements = kivy==2.3.0, bleak, python3, asyncio, setuptools, android, pyjnius, typing_extensions
+
 
 android.debug = 1
 
