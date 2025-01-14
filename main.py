@@ -10,7 +10,7 @@ from bleak import BleakScanner, BleakClient  # Importiert BleakScanner und Bleak
 Builder.load_file("main.kv")  # Lädt die KV-Datei mit der GUI-Definition
 
 # Definiert die richtige UUID für die Bluetooth-Charakteristik
-CHARACTERISTIC_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214"  # Beispiel-UUID, ersetzen mit der richtigen
+CHARACTERISTIC_UUID = "19b10002-e8f2-537e-4f6c-d104768a1214"  # Beispiel-UUID, ersetzen mit der richtigen
 
 class LoginScreen(Screen):  # Definiert die LoginScreen-Klasse, die von Screen erbt
     def connect(self, instance):
