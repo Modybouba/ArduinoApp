@@ -10,10 +10,12 @@ Builder.load_file("main.kv")
 
 CHARACTERISTIC_UUID = "19b10002-e8f2-537e-4f6c-d104768a1214"
 
+
 def run_in_loop(coro):
     """ Exécute une coroutine dans une boucle asyncio. """
     loop = asyncio.get_running_loop()
     return loop.run_until_complete(coro)
+
 
 class LoginScreen(Screen):
     def connect(self, instance):
@@ -30,6 +32,7 @@ class LoginScreen(Screen):
     def quit_app(self):
         App.get_running_app().stop()
 
+
 class MainScreen(Screen):
     def __init__(self, **kwargs):
         super(MainScreen, self).__init__(**kwargs)
@@ -39,6 +42,7 @@ class MainScreen(Screen):
         self.ids.led_on_wifi_button.disabled = True
         self.ids.led_off_wifi_button.disabled = True
         self.ids.ip_address.bind(text=self.validate_ip_address)
+
 
     def disconnect(self):
         login_screen = self.manager.get_screen('login')
@@ -57,31 +61,35 @@ class MainScreen(Screen):
         return self.ids.ip_address.text  # Gibt die eingegebene IP-Adresse zurück
 
     def is_valid_ip(self, ip):
-        # Überprüft, ob die IP-Adresse aus vier Teilen besteht und jeder Teil eine Zahl zwischen 0 und 255 ist
+        # Vérifie que l'adresse IP contient bien 4 parties séparées par des points
         parts = ip.split('.')
+
+        # Vérifie si on a bien 4 parties et que la dernière partie contient entre 1 et 3 chiffres
         if len(parts) == 4 and all(part.isdigit() and 0 <= int(part) <= 255 for part in parts):
-            return True
+            if 1 <= len(parts[3]) == 3:  # Assurer que la dernière partie est bien complète (1 à 3 chiffres)
+                return True
+
         return False
 
     def validate_ip_address(self, instance, value):
         if self.is_valid_ip(value):  # Vérifie si le format de l'adresse IP est correct
             if self.is_reachable(value):  # Vérifie si l'appareil est connectable
-                self.ids.result_label_ip.text = 'IP-Adresse ist korrekt und verbunden!'  # Adresse connectable
+                self.ids.result_label_ip.text = 'IP-Adresse ist verbunden!'  # Adresse connectable
                 self.ids.led_on_wifi_button.disabled = False  # Active les boutons WiFi
                 self.ids.led_off_wifi_button.disabled = False
                 self.ids.disconnect_wifi_button.disabled = False
             else:
-                self.ids.result_label_ip.text = 'IP-Adresse ist korrekt, aber nicht erreichbar.'  # Adresse non connectable
+                self.ids.result_label_ip.text = 'IP-Adresse nicht erreichbar.'  # Adresse non connectable
                 self.ids.led_on_wifi_button.disabled = True  # Désactive les boutons WiFi
                 self.ids.led_off_wifi_button.disabled = True
                 self.ids.disconnect_wifi_button.disabled = True
         else:
-            self.ids.result_label_ip.text = 'Ungültige IP-Adresse eingegeben.'  # Adresse invalide
+            self.ids.result_label_ip.text = ''  # Adresse invalide
             self.ids.led_on_wifi_button.disabled = True
             self.ids.led_off_wifi_button.disabled = True
             self.ids.disconnect_wifi_button.disabled = True
 
-    def is_reachable(self, ip, port=12345, timeout=2):
+    def is_reachable(self, ip, port=12345, timeout=1):
 
         try:
             # Création d'un socket et tentative de connexion
@@ -90,13 +98,12 @@ class MainScreen(Screen):
         except (socket.timeout, socket.error):
             return False  # La connexion a échoué
 
-
-
     def turn_on_led(self):
         try:
             ip_address = self.get_ip_address()  # Ruft die IP-Adresse ab
             self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Erstellt einen TCP/IP-Socket
-            self.client_socket.connect((ip_address, 12345))  # Verbindet sich mit dem Server an der angegebenen IP und Port
+            self.client_socket.connect(
+                (ip_address, 12345))  # Verbindet sich mit dem Server an der angegebenen IP und Port
             self.client_socket.sendall(b'1')  # Sendet das Signal zum Einschalten der LED
             print("LED turned on via Wi-Fi")  # Gibt eine Erfolgsnachricht aus
             self.update_button_colors(wifi=True, state='on')  # Aktualisiert die Button-Farben
@@ -115,12 +122,13 @@ class MainScreen(Screen):
             print(f"Error turning off LED via Wi-Fi: {e}")  # Gibt eine Fehlermeldung aus, wenn ein Fehler auftritt
 
     def disconnect_wifi(self):
+
         try:
             if self.client_socket:
                 self.client_socket.close()  #
                 self.client_socket = None
                 print("Wi-Fi connection disabled")
-                self.ids.result_label_ip.text = "WLAN deaktiviert."
+                #self.ids.result_label_ip.text = "WLAN deaktiviert."
             else:
                 print("No active Wi-Fi connection.")
                 self.ids.result_label_ip.text = "keine WLAN-Verbindung."
@@ -132,11 +140,13 @@ class MainScreen(Screen):
             self.ids.led_off_wifi_button.disabled = True
             self.ids.disconnect_wifi_button.disabled = True  # Désactive le bouton Disconnect WiFi
             self.update_button_colors(wifi=True, state='off')
+            self.ids.result_label_ip.text = ''
+            self.ids.ip_address.text = ''
+            self.ids.result_label_ip.text = "WLAN deaktiviert."
 
     def start_connect_device(self):
         """Démarre la connexion Bluetooth correctement."""
         asyncio.ensure_future(self.connect_device())
-
 
     async def connect_device(self):
         """Se connecte uniquement à l'Adresse MAC définie."""
@@ -174,7 +184,6 @@ class MainScreen(Screen):
             print("Erreur : L'appareil Bluetooth n'est pas connecté.")
             self.ids.bluetooth_status_label.text = "Erreur : Appareil non connecté"
 
-
     async def send_led_command_async(self, state):
         """Envoie une commande au périphérique BLE pour allumer ou éteindre la LED."""
         try:
@@ -188,14 +197,15 @@ class MainScreen(Screen):
 
             # Mise à jour de l'interface utilisateur
             if state == 1:
-                self.ids.bluetooth_status_label.text = "LED allumée (Bluetooth)"
+                self.ids.bluetooth_status_label.text = "LED an"
+                self.update_button_colors(wifi=False, state='on')  # Mise à jour des couleurs
             else:
-                self.ids.bluetooth_status_label.text = "LED éteinte (Bluetooth)"
+                self.ids.bluetooth_status_label.text = "LED aus"
+                self.update_button_colors(wifi=False, state='off')  # Mise à jour des couleurs
 
         except Exception as e:
             print(f"Erreur lors de l'envoi de la commande LED : {e}")
             self.ids.bluetooth_status_label.text = f"Erreur : {e}"
-
 
     async def disconnect_device(self):
         """Déconnexion Bluetooth propre."""
@@ -213,6 +223,9 @@ class MainScreen(Screen):
         else:
             print("No device is connected.")
 
+    def disconnect_device_wrapper(self):
+        """Appelle correctement la coroutine avec asyncio.create_task()"""
+        asyncio.ensure_future(self.disconnect_device())
     async def reset_ble_client(self):
         """Réinitialise le client BLE après déconnexion."""
         if self.bt_client:
@@ -241,11 +254,12 @@ class MainScreen(Screen):
 
     def reset_ui_after_disconnect(self):
         """Réinitialise l'interface après la déconnexion Bluetooth."""
-        self.ids.disconnect_button.disabled = True  # ✅ Désactive le bouton après déconnexion
+        self.ids.disconnect_button.disabled = True  # Désactive le bouton après déconnexion
         self.ids.led_on_button.disabled = True
         self.ids.led_off_button.disabled = True
         self.ids.bluetooth_status_label.text = "Disconnected"
-        
+
+
 class MyArduinoAppApp(App):
     def build(self):
         sm = ScreenManager()
@@ -253,8 +267,10 @@ class MyArduinoAppApp(App):
         sm.add_widget(MainScreen(name='main'))
         return sm
 
+
 async def main(app):
     await asyncio.gather(app.async_run("asyncio"))
+
 
 if __name__ == '__main__':
     asyncio.run(main(MyArduinoAppApp()))
