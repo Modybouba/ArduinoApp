@@ -1,474 +1,266 @@
 <LoginScreen>:  # Definition des Login-Bildschirms
 
-
-
-    FloatLayout:  # Utilisation de FloatLayout pour superposer les éléments
-
-
-
-        # Définition de la couleur de fond
-
+    FloatLayout:  # Verwendung von FloatLayout zur Überlagerung von Elementen
         canvas.before:
-
             Color:
-
-                rgba: 0.7, 0.85, 1, 1 # Bleu (RGBA: Rouge, Vert, Bleu, Alpha)
-
+                rgba: 0.5, 0.7, 1, 1  # Hintergrundfarbe (Blau)
             Rectangle:
-
                 pos: self.pos
-
                 size: self.size
 
+        BoxLayout:  # Bereich für den Begrüßungstext
+            orientation: 'vertical'
+            size_hint: None, None
+            width: "400dp"
+            height: "100dp"  # Reduzierte Höhe, damit der Text nicht zu viel Platz einnimmt
+            pos_hint: {"center_x": 0.5, "top": 1}  # Positioniert das Layout oben im Bildschirm
 
-
-
-
-
-
-        BoxLayout:  # Verwendung eines BoxLayouts für das vertikale Layout
-
-            orientation: 'vertical'  # Legt die Orientierung des Layouts auf vertikal fest
-
-            spacing: 10  # Abstand zwischen den Elementen
-
-            padding: 5  # Innenabstand des Layouts
-
-
-
-            Label:  # Erstellt ein Label zur Anzeige eines Begrüßungstextes
-
-                text: 'Herzlich willkommen in deiner Arduino-Steuerungs-App!'  # Textinhalt des Labels
-
-                halign: 'center'  # Horizontale Ausrichtung des Textes auf der Mitte
-
-                valign: 'top'  # Vertikale Ausrichtung des Textes oben
-
+            Label:
+                text: 'Herzlich willkommen in deiner MKr Wifi 1010 Steuerungs-App!'
+                font_size: '24sp'
                 color: 0, 0, 0, 1
-
-
-
-            TextInput:  # Textfeld zur Eingabe des Passworts
-
-                id: password_input  # ID des TextInput-Widgets
-
-                hint_text: 'Code Eingeben'  # Platzhaltertext, der angezeigt wird, wenn das Textfeld leer ist
-
-                password: True  # Maskiert die Eingabe als Passwort
-
-                multiline: False  # Erlaubt keine mehrzeilige Eingabe
-
-                size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
-
-                height: "40dp"  # Höhe des Textfelds
-
-                size_hint_x: 0.5  # Skalierung in der horizontalen Richtung (50% der Breite)
-
-                pos_hint: {"center_x": 0.5}  # Zentriert das Textfeld horizontal
-
-
-
-            Button:  # Button für die Anmeldung
-
-                text: 'Anmelden'  # Text, der auf dem Button angezeigt wird
-
-                on_press: root.connect(self)  # Aktion, die beim Drücken des Buttons ausgeführt wird (Verbindung herstellen)
-
-                size_hint_y: None  # Keine Skalierung in der vertikalen Richtung
-
-                height: "40dp"  # Höhe des Buttons
-
-                size_hint_x: 0.5  # Skalierung in der horizontalen Richtung (50% der Breite)
-
-                background_color: 0, 1, 0, 1  # Hintergrundfarbe des Buttons (grün)
-
-                pos_hint: {"center_x": 0.5}  # Zentriert den Button horizontal
-
-
-
-            Button:  # Bouton pour quitter l'application
-
-                text: 'Schließen'
-
-                on_press: root.quit_app()
-
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
                 size_hint_y: None
+                height: "60dp"
 
+        BoxLayout:  # Bereich für das Anmeldeformular (Code-Eingabe und Buttons)
+            orientation: 'vertical'
+            spacing: 10
+            padding: 15
+            size_hint: None, None  # Deaktiviert automatische Anpassung der Größe
+            width: "400dp"
+            height: "250dp"  # Festgelegte Höhe für eine geordnete Darstellung
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}  # Zentriert diesen Bereich im Bildschirm
+
+            TextInput:
+                id: password_input
+                hint_text: 'Code Eingeben'
+                password: True
+                multiline: False
+                size_hint_y: None
                 height: "40dp"
-
                 size_hint_x: 0.5
+                pos_hint: {"center_x": 0.5}
 
+            Label:
+                id: result_label
+                text: ''
+                color: 1, 0, 0, 1
+                size_hint_y: None
+                height: "20dp"
+                font_size: '16sp'
+                halign: 'center'
+
+            Button:
+                text: 'Anmelden'
+                on_press: root.connect(self)
+                size_hint_y: None
+                height: "40dp"
+                size_hint_x: 0.5
+                background_color: 0, 1, 0, 1
+                pos_hint: {"center_x": 0.5}
+
+            Widget:  # Abstand zwischen den Buttons, um sie optisch zu trennen
+                size_hint_y: None
+                height: "10dp"
+
+            Button:
+                text: 'App Schließen'
+                on_press: root.quit_app()
+                size_hint_y: None
+                height: "40dp"
+                size_hint_x: 0.5
                 background_color: 1, 0, 0, 1
-
                 pos_hint: {"center_x": 0.5}
 
 
 
-            Label:  # Label zur Anzeige des Ergebnisses der Anmeldung
+<MainScreen>:  # Hauptbildschirm der App
 
-                id: result_label  # ID des Labels
-
-                text: ''  # Initialer Textinhalt des Labels (leer)
-
-
-
-<MainScreen>:  # Écran principal
-
-
-
-    FloatLayout:  # Utilisation de FloatLayout pour superposer les éléments
-
-
-
-        # Définition de la couleur de fond
-
+    FloatLayout:  # Hauptlayout mit Hintergrundfarbe
         canvas.before:
-
             Color:
-
-                rgba: 0, 0, 0, 1 # Bleu (RGBA: Rouge, Vert, Bleu, Alpha)
-
+                rgba: 0.3, 0.3, 0.3, 1  # Hintergrundfarbe (Grau)
             Rectangle:
-
                 pos: self.pos
-
                 size: self.size
 
-
-
-
-
-        ScrollView:  # Ajout pour permettre le défilement si nécessaire
-
+        ScrollView:  # Ermöglicht das Scrollen, falls der Inhalt zu groß ist
             BoxLayout:
-
                 orientation: 'vertical'
-
                 spacing: 10
-
-                padding: 10
-
+                padding: 15
                 size_hint_y: None
-
                 height: self.minimum_height
 
-
-
-                Label:  # Titre principal
-
+                Label:  # Titel des Hauptbildschirms
                     text: 'Steuerungsbereich!'
-
+                    font_size: '25sp'
                     size_hint_y: None
-
                     height: "30dp"
+                    color : 1, 1, 1, 1
 
-
-
-                BoxLayout:  # Zone pour l'adresse IP
-
+                BoxLayout:  # Bereich zur Eingabe der IP-Adresse
                     orientation: 'vertical'
-
                     spacing: 5
-
                     size_hint_y: None
-
                     height: "100dp"
 
-
-
-                BoxLayout:  # Section de contrôle Wi-Fi
-
+                BoxLayout:  # Steuerung der WLAN-Funktionen
                     orientation: 'vertical'
-
                     spacing: 10
-
                     size_hint_y: None
-
                     height: "150dp"
 
-
-
-                    Label:
-
-                        text: 'Steuerung über WLAN'
-
+                    Label:  # Titel für WLAN-Steuerung
+                        text: 'WLAN Steuerung'
                         size_hint_y: None
-
                         height: "20dp"
+                        font_size: '20sp'
 
 
-
-                    TextInput:
-
+                    TextInput:  # Eingabefeld für die IP-Adresse
                         id: ip_address
-
                         hint_text: 'IP Address Eingeben'
-
                         multiline: False
-
                         size_hint_y: None
-
                         height: "40dp"
-
                         size_hint_x: 0.5
-
                         pos_hint: {"center_x": 0.5}
 
-
-
-                    Label:
-
+                    Label:  # Ergebnisanzeige der IP-Prüfung
                         id: result_label_ip
-
                         text: ''
-
                         size_hint_y: None
-
                         height: "20dp"
+                        color: 1, 1, 1, 1
 
-                        color: 1, 1, 1, 1  # Rouge pour afficher une erreur
-
-
-
-
-
-
-
-                    BoxLayout:
-
+                    BoxLayout:  # Steuerungsbuttons für die LED via WLAN
                         orientation: 'horizontal'
-
-                        spacing: 5
-
+                        spacing: 25
                         size_hint_y: None
-
                         size_hint_x: 0.8
-
                         pos_hint: {"center_x": 0.5}
-
                         height: "40dp"
 
-
-
-                        Button:
-
+                        Button:  # Button zum Einschalten der LED via WLAN
                             id: led_on_wifi_button
-
                             text: 'LED an '
-
                             size_hint_x: 0.5
-
                             height: "40dp"
-
                             on_press: root.turn_on_led()
-
                             disabled: True
+                            background_color: 1, 1, 1, 1
 
-
-
-                        Button:
-
+                        Button:  # Button zum Ausschalten der LED via WLAN
                             id: led_off_wifi_button
-
                             text: 'LED aus '
-
                             size_hint_x: 0.5
-
                             height: "40dp"
-
                             on_press: root.turn_off_led()
-
                             disabled: True
+                            background_color: 1, 1, 1, 1
 
-
-
-                    Button:
-
-                        id: disconnect_wifi_button
-
-                        text: 'WLAN deaktivieren'
-
+                    Widget:
                         size_hint_y: None
+                        height: "10dp"
 
+
+                    Button:  # Button zum Deaktivieren der WLAN-Verbindung
+                        id: disconnect_wifi_button
+                        text: 'WLAN deaktivieren'
+                        size_hint_y: None
                         height: "40dp"
-
                         size_hint_x: 0.5
-
                         pos_hint: {"center_x": 0.5}
-
                         on_press: root.disconnect_wifi()
-
                         background_color: 1, 0, 0, 1
-
                         disabled: True
 
-
-
-                BoxLayout:  # Section de contrôle Bluetooth
-
+                BoxLayout:  # Steuerung der Bluetooth-Funktionen
                     orientation: 'vertical'
-
                     spacing: 10
-
                     size_hint_y: None
-
                     height: "200dp"
 
-
-
-                    Label:
-
+                    Label:  # Titel für BLE-Steuerung
                         id: result_label_bluetooth
-
-                        text: 'Steuerung über Bluetooth'
-
+                        text: 'BLE Steuerung'
                         size_hint_y: None
-
                         height: "20dp"
+                        font_size: '20sp'
 
 
-
-
-
-
-
-                    Label:
-
+                    Label:  # Statusanzeige für Bluetooth-Verbindung
                         id: bluetooth_status_label
-
                         text: ''
-
                         size_hint_y: None
-
                         height: "20dp"
+                        color: 1, 1, 1, 1
 
-                        color: 0, 1, 0, 1  # Texte en vert pour succès
-
-
-
-
-
-                    BoxLayout:
-
+                    BoxLayout:  # Buttons zur Steuerung der BLE-Verbindung
                         orientation: 'horizontal'
-
-                        spacing: 5
-
+                        spacing: 25
                         size_hint_y: None
-
                         size_hint_x: 0.8
-
                         pos_hint: {"center_x": 0.5}
-
                         height: "40dp"
 
-
-
-
-
-
-
-
-
-                        Button:
-
+                        Button:  # Button zum Verbinden mit BLE-Gerät
                             id: connect_button
-
-                            text: 'Verbinden'
-
-                            size_hint_x: 0.3
-
+                            text: 'BLE Verbinden'
+                            size_hint_x: 0.4
                             height: "40dp"
-
                             on_press: app.root.get_screen('main').start_connect_device()
-
-
-                            background_color: 0.5, 0.5, 0.5, 1
-
+                            background_color: 0, 0, 1, 1
                             disabled: False
 
-
-
-                        Button:
-
+                        Button:  # Button zum Trennen der BLE-Verbindung
                             id: disconnect_button
-
-                            text: 'Bluetooth Desaktivieren'
-
+                            text: 'BLE Deaktivieren'
                             on_press: app.root.get_screen('main').disconnect_device_wrapper()
-
                             size_hint_x: 0.4
-
                             height: "40dp"
-
                             background_color: 1, 0, 0, 1
-
                             disabled: True
 
-
-
-
-
-                    BoxLayout:
-
-                        orientation: 'horizontal'
-
-                        spacing: 5
-
+                    Widget:
                         size_hint_y: None
+                        height: "10dp"
 
+                    BoxLayout:  # Steuerungsbuttons für die LED via BLE
+                        orientation: 'horizontal'
+                        spacing: 25
+                        size_hint_y: None
                         size_hint_x: 0.8
-
                         pos_hint: {"center_x": 0.5}
-
                         height: "40dp"
 
-
-
-                        Button:
-
-                            id: led_on_button
-
-                            text: 'LED an (Bluetooth)'
-
+                        Button:  # Button zum Einschalten der LED via BLE
+                            id: led_on_ble_button
+                            text: 'LED an '
                             size_hint_x: 0.5
-
                             height: "40dp"
-
                             on_press: app.root.get_screen('main').control_led(1)
-
                             disabled: True
 
-
-
-                        Button:
-
-                            id: led_off_button
-
-                            text: 'LED aus (Bluetooth)'
-
+                        Button:  # Button zum Ausschalten der LED via BLE
+                            id: led_off_ble_button
+                            text: 'LED aus '
                             size_hint_x: 0.5
-
                             height: "40dp"
-
-                            on_press: app.root.get_screen('main').control_led(0)  # Corrige l'appel
-
+                            on_press: app.root.get_screen('main').control_led(0)
                             disabled: True
-
-
-
-                Button:  # Bouton de déconnexion
-
+                    Widget:
+                        size_hint_y: None
+                        height: "10dp"
+                Button:  # Button zum Abmelden
                     text: 'Abmelden'
-
                     size_hint_y: None
-
                     height: "40dp"
-
                     size_hint_x: 0.5
-
                     pos_hint: {"center_x": 0.5}
-
                     background_color: 1, 0, 0, 1
-
                     on_press: root.disconnect()
